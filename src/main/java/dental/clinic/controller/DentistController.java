@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.ServerException;
+import java.util.List;
+
 @RestController //
 @RequestMapping("api/dentist") //Especificar ruta
 public class DentistController {
@@ -22,11 +25,32 @@ public class DentistController {
         return new ResponseEntity<>(dentistDTO, HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<DentistDTO> create(@RequestBody DentistDTO dentistDTO){
         //Request body, le mandamos un cuerpo en la peticion
         DentistDTO newDentistDTO = dentistService.create(dentistDTO);
         return new ResponseEntity<>(newDentistDTO, HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Integer id){
+        dentistService.deleteById(id);
+        return new ResponseEntity<>("Dentist deleted",HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<DentistDTO> update(@RequestBody DentistDTO dentistDTO)throws ServerException{
+        if(dentistService.findById(dentistDTO.getId()) == null){
+            throw new ServerException("Dentist not found");
+        }else{
+            DentistDTO updateDentistDTO = dentistService.update(dentistDTO);
+            return new ResponseEntity<>(updateDentistDTO, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<DentistDTO>> findAll(){
+        List<DentistDTO> dentistDTOList = dentistService.findAll();
+        return new ResponseEntity<>(dentistDTOList, HttpStatus.OK);
+    }
 }
