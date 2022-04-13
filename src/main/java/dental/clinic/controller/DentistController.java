@@ -1,6 +1,7 @@
 package dental.clinic.controller;
 
 import dental.clinic.DTO.DentistDTO;
+import dental.clinic.DTO.PatientDTO;
 import dental.clinic.services.IDentistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
+import java.util.Collection;
 import java.util.List;
 
 @RestController //
@@ -49,8 +51,8 @@ public class DentistController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<DentistDTO>> findAll(){
-        List<DentistDTO> dentistDTOList = dentistService.findAll();
-        return new ResponseEntity<>(dentistDTOList, HttpStatus.OK);
+    public Collection<DentistDTO> findAll() {
+        return dentistService.findAll();
+
     }
 }

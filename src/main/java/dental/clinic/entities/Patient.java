@@ -1,13 +1,16 @@
 package dental.clinic.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -38,6 +41,10 @@ public class Patient {
             referencedColumnName = "id")
     private Adress adress;
 
+    // Indicar que el atributo “patient” del lado de la clase "appointment" es quien establece la relación
+    @OneToMany(mappedBy = "patient")
+    @JsonIgnore //Si este objeto viaja en formato JSON, podría entrar en un bucle infinito
+    private Set<Appointment> appointments;
 
     @Override
     public String toString() {

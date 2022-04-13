@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -47,8 +48,8 @@ public class PatientController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<PatientDTO>> findAll(){
-        List<PatientDTO> patientDTOList = patientService.findAll();
-        return new ResponseEntity<>(patientDTOList,HttpStatus.OK);
+    public Collection<PatientDTO> findAll() {
+        return patientService.findAll();
+
     }
 }

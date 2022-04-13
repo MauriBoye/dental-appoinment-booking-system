@@ -1,7 +1,11 @@
 package dental.clinic.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.sun.istack.NotNull;
+import dental.clinic.DTO.AppointmentDTO;
 import dental.clinic.DTO.DentistDTO;
+import dental.clinic.entities.Appointment;
 import dental.clinic.entities.Dentist;
 import dental.clinic.repository.IDentistRepository;
 import dental.clinic.services.IDentistService;
@@ -9,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service //Metodos y logica
@@ -19,7 +25,7 @@ public class implDentistService implements IDentistService {
     private IDentistRepository dentistRepository; //Traigo los metodos de repositorio(CRUD)
 
     @Autowired
-    private ModelMapper modelMapper; //Herramienta para pasar de entidad a DTO
+    private ObjectMapper objectMapper; //Herramienta para pasar de entidad a DTO
 
     @Override
     public DentistDTO findById(@NotNull Integer id) {
@@ -60,23 +66,23 @@ public class implDentistService implements IDentistService {
     }
 
     @Override
-    public List<DentistDTO> findAll() {
-        //Recibe una lista
+    public Set<DentistDTO> findAll() {
         List<Dentist> dentistList = dentistRepository.findAll();
-        //Pasar la lista de entidades a dto, 1ro stream.map (stream para usar .map) para recorrer, luego mapDTO para pasar de entidad a dto y 3ro collect lo guarda en una lista
-        List<DentistDTO> dentistDTOList = dentistList.stream().map(dentist -> mapDTO(dentist)).collect(Collectors.toList());
-        //Retornar lista DTO
-        return dentistDTOList;
+        Set<DentistDTO> dentistDTOSet = new HashSet<>();
+        for (Dentist dentist : dentistList) {
+            dentistDTOSet.add(mapDTO(dentist));
+        }
+        return dentistDTOSet;
     }
 
     //----------Mapper-----------
     private DentistDTO mapDTO(Dentist dentist){ //Herramienta para pasar de entidad a DTO
-        DentistDTO dentistDTO = modelMapper.map(dentist, DentistDTO.class); //1er parametro la entidad pasada por parametro, 2do a que la quiero convertir (DTO)
+        DentistDTO dentistDTO = objectMapper.convertValue(dentist, DentistDTO.class); //1er parametro la entidad pasada por parametro, 2do a que la quiero convertir (DTO)
         return dentistDTO; //Devolvemos DTO
     }
 
     private Dentist mapEntity(DentistDTO dentistDTO){ //Herramienta para pasar de DTO a entidad
-        Dentist dentist = modelMapper.map(dentistDTO, Dentist.class);//1er parametro el DTO pasada por parametro, 2do a que la quiero convertir (entidad)
+        Dentist dentist = objectMapper.convertValue(dentistDTO, Dentist.class);//1er parametro el DTO pasada por parametro, 2do a que la quiero convertir (entidad)
         return dentist; //Retorna una entidad
     }
 

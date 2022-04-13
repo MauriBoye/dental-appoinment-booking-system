@@ -1,10 +1,13 @@
 package dental.clinic.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 // Lombok
@@ -27,6 +30,11 @@ public class Dentist {
 
     @Column(name = "registration")
     private String registration;
+
+    // Indicar que el atributo “dentist” del lado de la clase "appointment" es quien establece la relación
+    @OneToMany(mappedBy = "dentist")
+    @JsonIgnore //Si este objeto viaja en formato JSON, podría entrar en un bucle infinito
+    private Set<Appointment> appointments;
 
     //Generamos toString
     @Override

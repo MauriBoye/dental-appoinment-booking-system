@@ -1,16 +1,19 @@
 package dental.clinic.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.sun.istack.NotNull;
 import dental.clinic.DTO.AdressDTO;
 import dental.clinic.entities.Adress;
 import dental.clinic.repository.IAdressRepository;
 import dental.clinic.services.IAdressService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
+
 
 @Service
 public class implAdressService implements IAdressService {
@@ -19,7 +22,7 @@ public class implAdressService implements IAdressService {
     private IAdressRepository adressRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper;
 
     @Override
     public AdressDTO findById(@NotNull Integer id) {
@@ -48,20 +51,24 @@ public class implAdressService implements IAdressService {
     }
 
     @Override
-    public List<AdressDTO> findAll() {
+    public Set<AdressDTO> findAll() {
         List<Adress> adressList = adressRepository.findAll();
-        List<AdressDTO> adressDTOList = adressList.stream().map(adress -> mapDTO(adress)).collect(Collectors.toList());
-        return adressDTOList;
+        Set<AdressDTO> adressDTOSet = new HashSet<>();
+        for (Adress adress : adressList) {
+            adressDTOSet.add(mapDTO(adress));
+        }
+        return adressDTOSet;
+
     }
 
     //----------Mapper----------
     private AdressDTO mapDTO(Adress adress){
-        AdressDTO adressDTO = modelMapper.map(adress,AdressDTO.class);
+        AdressDTO adressDTO = objectMapper.convertValue(adress,AdressDTO.class);
         return adressDTO;
     }
 
     private Adress mapEntity(AdressDTO adressDTO){
-        Adress adress = modelMapper.map(adressDTO, Adress.class);
+        Adress adress = objectMapper.convertValue(adressDTO, Adress.class);
         return adress;
     }
 }
