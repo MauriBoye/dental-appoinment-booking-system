@@ -19,24 +19,28 @@ public class PatientController {
     @Autowired
     private IPatientService patientService;
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id){
         PatientDTO patientDTO = patientService.findById(id);
         return new ResponseEntity<>(patientDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<PatientDTO> create(@RequestBody PatientDTO patientDTO){
         PatientDTO newPatientDTO = patientService.create(patientDTO);
         return new ResponseEntity<>(newPatientDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") Integer id){
         patientService.deleteById(id);
         return new ResponseEntity<>("Patient deleted", HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PutMapping("/update")
     public ResponseEntity<PatientDTO> update(@RequestBody PatientDTO patientDTO)throws ServerException{
         if(patientService.findById(patientDTO.getId()) == null){
@@ -47,6 +51,7 @@ public class PatientController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/list")
     public Collection<PatientDTO> findAll() {
         return patientService.findAll();

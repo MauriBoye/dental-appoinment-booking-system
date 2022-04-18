@@ -28,24 +28,28 @@ public class AppointmentController {
     @Autowired
     private IPatientService patientService;
 
+    @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<AppointmentDTO> findById(@PathVariable("id") Integer id){
         AppointmentDTO appointmentDTO = appointmentService.findById(id);
         return new ResponseEntity<>(appointmentDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/create")
     private ResponseEntity<AppointmentDTO> create(@RequestBody AppointmentDTO appointmentDTO){
         AppointmentDTO newAppointmentDTO = appointmentService.create(appointmentDTO);
         return new ResponseEntity<>(newAppointmentDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete/{id}")
     private ResponseEntity<String> deleteById(@PathVariable("id")Integer id){
         appointmentService.deleteById(id);
         return new ResponseEntity<>("Appointment deleted", HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PutMapping("/update")
     private ResponseEntity<AppointmentDTO> update(@RequestBody AppointmentDTO appointmentDTO)throws ServerException{
         if(appointmentService.findById(appointmentDTO.getId()) == null){
@@ -56,6 +60,7 @@ public class AppointmentController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/list")
     public Collection<AppointmentDTO> findAll() {
         return appointmentService.findAll();

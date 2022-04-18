@@ -19,6 +19,7 @@ public class DentistController {
     @Autowired //Inyectar service, traer metodos
     private IDentistService dentistService;
 
+    @CrossOrigin
     @GetMapping("/{id}") //Del tipo get para consultar datos, por parametro le pasamos id
     public ResponseEntity<DentistDTO> findById(@PathVariable("id") Integer id){
         //ResponseEntity agrego el tipo de dato que me devuelve y al lado el codigo de estado que me da la peticion
@@ -27,6 +28,7 @@ public class DentistController {
         return new ResponseEntity<>(dentistDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<DentistDTO> create(@RequestBody DentistDTO dentistDTO){
         //Request body, le mandamos un cuerpo en la peticion
@@ -34,12 +36,14 @@ public class DentistController {
         return new ResponseEntity<>(newDentistDTO, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") Integer id){
         dentistService.deleteById(id);
         return new ResponseEntity<>("Dentist deleted",HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PutMapping("/update")
     public ResponseEntity<DentistDTO> update(@RequestBody DentistDTO dentistDTO)throws ServerException{
         if(dentistService.findById(dentistDTO.getId()) == null){
@@ -50,6 +54,7 @@ public class DentistController {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/list")
     public Collection<DentistDTO> findAll() {
         return dentistService.findAll();
