@@ -8,6 +8,7 @@ import dental.clinic.services.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
@@ -35,6 +36,7 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @CrossOrigin
     @PostMapping("/create")
     private ResponseEntity<AppointmentDTO> create(@RequestBody AppointmentDTO appointmentDTO){
@@ -42,6 +44,7 @@ public class AppointmentController {
         return new ResponseEntity<>(newAppointmentDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @CrossOrigin
     @DeleteMapping("/delete/{id}")
     private ResponseEntity<String> deleteById(@PathVariable("id")Integer id){
@@ -49,6 +52,7 @@ public class AppointmentController {
         return new ResponseEntity<>("Appointment deleted", HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @CrossOrigin
     @PutMapping("/update")
     private ResponseEntity<AppointmentDTO> update(@RequestBody AppointmentDTO appointmentDTO)throws ServerException{

@@ -6,6 +6,7 @@ import dental.clinic.services.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.ServerException;
@@ -19,6 +20,7 @@ public class PatientController {
     @Autowired
     private IPatientService patientService;
 
+
     @CrossOrigin
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id){
@@ -26,6 +28,7 @@ public class PatientController {
         return new ResponseEntity<>(patientDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')  or hasRole('USER')")
     @CrossOrigin
     @PostMapping("/create")
     public ResponseEntity<PatientDTO> create(@RequestBody PatientDTO patientDTO){
@@ -33,6 +36,7 @@ public class PatientController {
         return new ResponseEntity<>(newPatientDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @CrossOrigin
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") Integer id){
@@ -40,6 +44,7 @@ public class PatientController {
         return new ResponseEntity<>("Patient deleted", HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @CrossOrigin
     @PutMapping("/update")
     public ResponseEntity<PatientDTO> update(@RequestBody PatientDTO patientDTO)throws ServerException{
